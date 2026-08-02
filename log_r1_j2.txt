@@ -1,0 +1,55 @@
+
+**************************************************************************
+* IOSv is strictly limited to use for evaluation, demonstration and IOS  *
+* education. IOSv is provided as-is and is not supported by Cisco's      *
+* Technical Advisory Center. Any use or disclosure, in whole or in part, *
+* of the IOSv Software or Documentation to any third party for any       *
+* purposes is expressly prohibited except as otherwise authorized by     *
+* Cisco in writing.                                                      *
+**************************************************************************
+R1#
+R1#terminal length 0
+R1#terminal width 511
+R1#
+R1#
+R1#config term
+Enter configuration commands, one per line.  End with CNTL/Z.
+R1(config)#
+R1(config)#ip vrf control-data
+R1(config-vrf)#exit
+R1(config)#no router ospf 1
+R1(config)#router ospf 1 vrf control-data
+R1(config-router)#exit
+R1(config)#interface GigabitEthernet0/1
+R1(config-if)#ip vrf forwarding control-data
+R1(config-if)#ip ospf 1 area 0
+R1(config-if)#exit
+R1(config)#interface GigabitEthernet0/2
+R1(config-if)#ip vrf forwarding control-data
+R1(config-if)#ip ospf 1 area 0
+R1(config-if)#exit
+R1(config)#interface loopback 0
+R1(config-if)#ip vrf forwarding control-data
+R1(config-if)#ip address 1.1.1.1 255.255.255.255
+R1(config-if)#ip ospf 1 area 0
+R1(config-if)#exit
+R1(config)#ip access-list standard VTY_ACCESS
+R1(config-std-nacl)#permit 172.31.111.0 0.0.0.15
+R1(config-std-nacl)#permit 10.30.6.0 0.0.0.255
+R1(config-std-nacl)#exit
+R1(config)#line vty 0 4
+R1(config-line)#access-class VTY_ACCESS in vrf-also
+R1(config-line)#line vty 5 15
+R1(config-line)#access-class VTY_ACCESS in vrf-also
+R1(config-line)#exit
+R1(config)#
+R1(config)#end
+R1#
+R1#
+R1#
+R1#write mem
+Building configuration...
+
+  [OK]
+R1#
+R1#exit

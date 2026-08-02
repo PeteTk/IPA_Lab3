@@ -1,0 +1,42 @@
+
+**************************************************************************
+* IOSv is strictly limited to use for evaluation, demonstration and IOS  *
+* education. IOSv is provided as-is and is not supported by Cisco's      *
+* Technical Advisory Center. Any use or disclosure, in whole or in part, *
+* of the IOSv Software or Documentation to any third party for any       *
+* purposes is expressly prohibited except as otherwise authorized by     *
+* Cisco in writing.                                                      *
+**************************************************************************S1#
+S1#terminal length 0
+S1#terminal width 511
+S1#
+S1#
+S1#config term
+Enter configuration commands, one per line.  End with CNTL/Z.
+S1(config)#
+S1(config)#vlan 101
+S1(config-vlan)#name Control-Data
+S1(config-vlan)#exit
+S1(config)#interface range GigabitEthernet0/1, GigabitEthernet1/1
+S1(config-if-range)#switchport mode access
+S1(config-if-range)#switchport access vlan 101
+S1(config-if-range)#exit
+S1(config)#ip access-list standard VTY_ACCESS
+S1(config-std-nacl)#permit 172.31.111.0 0.0.0.15
+S1(config-std-nacl)#permit 10.30.6.0 0.0.0.255
+S1(config-std-nacl)#exit
+S1(config)#line vty 0 4
+S1(config-line)#access-class VTY_ACCESS in
+S1(config-line)#line vty 5 15
+S1(config-line)#access-class VTY_ACCESS in
+S1(config-line)#exit
+S1(config)#
+S1(config)#end
+S1#
+S1#
+S1#
+S1#write mem
+Building configuration...
+Compressed configuration from 4086 bytes to 2005 bytes[OK]
+S1#
+S1#exit

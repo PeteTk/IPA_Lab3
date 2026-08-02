@@ -1,0 +1,20 @@
+vlan {{ vlan_id }}
+name {{ vlan_name }}
+exit
+
+interface range {{ uplink_ports }}
+switchport mode access
+switchport access vlan {{ vlan_id }}
+exit
+
+ip access-list standard VTY_ACCESS
+{% for subnet in vty_permit_subnets %}
+permit {{ subnet.ip }} {{ subnet.wildcard }}
+{% endfor %}
+exit
+
+line vty 0 4
+access-class VTY_ACCESS in
+line vty 5 15
+access-class VTY_ACCESS in
+exit
